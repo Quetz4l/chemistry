@@ -1,11 +1,15 @@
 local component = require("component")
 local sides = require("sides")
-local transposer_base  = component.proxy(component.get("f56808"))
-local endechest_base = sides.bottom
-local interface_base = sides.south
+--local transposer_base, endechest_base, out_side_base
 
 ChemicalReactor = {}
 ChemicalReactor.__index = ChemicalReactor
+
+function load_params(_transposer_base, _endechest_base, _out_side_base)
+  transposer_base = _transposer_base
+  endechest_base = _endechest_base
+  out_side_base = _out_side_base
+end 
 
 function ChemicalReactor:new(primaryAddress, secondaryAddress)
     local reactor = {}
@@ -128,7 +132,7 @@ function ChemicalReactor:unload(self, circuit)
     self.secondary.transferItem(sides.top, self.secondaryEnderChestSide, 64, 2, 24)
     self.secondary.transferItem(sides.bottom, self.secondaryEnderChestSide, 64, 2, 23)
     for i = 23, 26 do
-        transposer_base.transferItem(endechest_base, interface_base, 64, i)
+        transposer_base.transferItem(endechest_base, out_side_base, 64, i)
     end
 end
 
