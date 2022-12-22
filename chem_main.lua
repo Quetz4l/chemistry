@@ -2,7 +2,7 @@ local component = require("component")
 local sides = require("sides")
 local term = require("term")
 local ChemicalReactor = dofile("ChemicalReactor.lua")
-local TFFT = dofile("TFFT.lua")
+--local TFFT = dofile("TFFT.lua")
 local main_transposer = component.proxy("2eefaa58-e253-4009-a36c-dcc080608cb4")
 
 local reactors = {
@@ -11,7 +11,6 @@ local reactors = {
     ChemicalReactor:new("03a64490-7a6c-4b82-8497-05ebf3524ff9", "4f6d3a0d-3980-4b9f-9f16-6c2726923ee5"),
     ChemicalReactor:new("be17551c-5520-465f-8e9c-f4d4444512ef", "bb9728c9-9219-4332-8119-2494a7835c65"),
     ChemicalReactor:new("1e01d0a1-f5ab-46aa-874f-56730639f01b", "06d57347-1780-4ce0-88ac-7dd03a653e7e"),
-
 }
 
 local chest_with_circuits = sides.top
@@ -21,7 +20,7 @@ local interface = sides.east
 local balancer = 0
 
 function check_chests_exist()
-  if main_transposer == nil then    
+  if main_transposer == nil then
     print('Главный трансопзер не найден!')
     exit()
   elseif main_transposer.getInventoryName(chest_with_circuits) == nil then
@@ -72,17 +71,16 @@ while true do
                 main_transposer.transferItem(chest_with_circuits, main_enderchest, 1, circuit)
             end
     end
-    
+
     reactor = getAvailibleReactor()
-    reactor:unload(reactor, true)   
+    reactor:unload(reactor)
     main_transposer.transferItem(main_enderchest, chest_with_circuits, 1, 27)
     for i = 23, 26 do
       main_transposer.transferItem(main_enderchest, interface, 64, i)
     end
     reactor:loadRecipe()
         os.sleep(0.1)
-        
-  
+
     else
         os.sleep(0.3)
     end

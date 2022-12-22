@@ -51,6 +51,11 @@ local fluids_cell = {
     ["gregtech:gt.metaitem.01324013"] = true
 }
 
+local item_filter = {
+    ['gregtech:gt.metaitem.01:17035.0'] = true,
+    ['gregtech:gt.metaitem.01:2026.0'] = true,
+}
+
 function ChemicalReactor:loadFluid(self, hatchNumber, slot)
     if hatchNumber == 1 then
         self.primary.transferItem(self.primaryEnderChestSide, sides.top, 64, slot)
@@ -96,7 +101,7 @@ function ChemicalReactor:loadRecipe()
 
     if needs_cicle then
         local flag = true
-        while flag do -- ждёмс, пока рецепт весь закинеться в химку
+        while flag do -- ждёмс, пока рецепт весь закинется в химку
             os.sleep(1)
             if self.primary.getSlotStackSize(self.primaryEnderChestSide, 1) ~= 0 then
                 return
@@ -118,42 +123,42 @@ function ChemicalReactor:loadRecipe()
                         end
                     end
                 end
-                ChemicalReactor:unload(self, false)
+                ChemicalReactor:unload(self)
             end
         end
     end
 end
 
-function ChemicalReactor:unload(self, circuit)
-  if circuit then
-        if item ~= nil and item.name ..":".. item.damage == "gregtech:gt.metaitem.01:17035.0" then
-            self.primary.transferItem(self.primaryInputBusSide, self.primaryEnderChestSide, 1, 1, 26)
-        else
-            self.primary.transferItem(self.primaryInputBusSide, self.primaryEnderChestSide, 1, 1, 27)
+function ChemicalReactor:unload(self)
+    for slot= 1,2 do
+        item = self.primary.getStackInSlot(self.primaryInputBusSide, slot)
+        if item ~= nil then
+            if item.name == "gregtech:gt.integrated_circuit" then 
+                self.primary.transferItem(self.primaryInputBusSide, self.primaryEnderChestSide, 1, slot, 27)
+            else
+                self.primary.transferItem(self.primaryInputBusSide, self.primaryEnderChestSide, 1, slot, 26)
+            end
         end
     end
-    self.primary.transferItem(sides.top, self.primaryEnderChestSide, 64, 2, 26)
-    self.primary.transferItem(sides.bottom, self.primaryEnderChestSide, 64, 2, 25)
-    self.secondary.transferItem(sides.top, self.secondaryEnderChestSide, 64, 2, 24)
-    self.secondary.transferItem(sides.bottom, self.secondaryEnderChestSide, 64, 2, 23)
-    for i = 23, 26 do
+
+    self.secondary.transferItem(sides.bottom, self.secondaryEnderChestSide, 64, 2, 22)
+    self.secondary.transferItem(sides.top, self.secondaryEnderChestSide, 64, 2, 23)
+    self.primary.transferItem(sides.bottom, self.primaryEnderChestSide, 64, 2, 24)
+    self.primary.transferItem(sides.top, self.primaryEnderChestSide, 64, 2, 25)
+      
+    for i = 22, 24 do
         main_transpoer.transferItem(main_endechest, interface, 64, i)
     end
 end
 
 function ChemicalReactor:isInputBusEmpty()
-    item = self.primary.getStackInSlot(self.primaryInputBusSide, 1)
-    item2 = self.primary.getStackInSlot(self.primaryInputBusSide, 2)
-
-    if item == nil or
-        (item.name == "gregtech:gt.integrated_circuit" and
-        (item2 == nil or
-        item2.name .. ":" .. item2.damage == "gregtech:gt.metaitem.01:2026" or
-        item2.name .. ":" .. item2.damage == "gregtech:gt.metaitem.01:17035.0"))
-    then
-        return true
-    else
-        return false
+    for slot= 1,3 do
+        item = self.primary.getStackInSlot(self.primaryInputBusSide, slot)
+        if item ~= nil and item.name ~= "gregtech:gt.integrated_circuit" and item_filter[item.name .. ":" .. item.damage] == false then
+            return false
+        else
+            return true
+        end
     end
 end
 
