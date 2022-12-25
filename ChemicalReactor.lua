@@ -153,18 +153,22 @@ end
 
 function ChemicalReactor:isInputBusEmpty()
     for slot= 1,3 do
-        item = self.primary.getStackInSlot(self.primaryInputBusSide, slot)
-        if item ~= nil and item.name ~= "gregtech:gt.integrated_circuit" and item_filter[item.name .. ":" .. item.damage] == false then
-            return false
-        else
-            return true
+        local item = self.primary.getStackInSlot(self.primaryInputBusSide, slot)
+        local is_empty = true
+
+        if item ~= nil and item.name ~= "gregtech:gt.integrated_circuit" and item_filter[item.name .. ":" .. item.damage] == nil then 
+            is_empty = false
         end
+        
+        return is_empty
     end
 end
 
 function ChemicalReactor:isInputHatchEmpty()
     return self.primary.getFluidInTank(sides.top, 1).amount == 0 and
-        self.secondary.getFluidInTank(sides.top, 1).amount == 0
+        self.primary.getFluidInTank(sides.bottom, 1).amount == 0 and 
+        self.secondary.getFluidInTank(sides.top, 1).amount == 0 and
+        self.secondary.getFluidInTank(sides.bottom, 1).amount == 0
 end
 
 return ChemicalReactor

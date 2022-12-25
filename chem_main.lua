@@ -2,7 +2,6 @@ local component = require("component")
 local sides = require("sides")
 local term = require("term")
 local ChemicalReactor = dofile("ChemicalReactor.lua")
---local TFFT = dofile("TFFT.lua")
 local main_transposer = component.proxy("2eefaa58-e253-4009-a36c-dcc080608cb4")
 
 local reactors = {
@@ -70,18 +69,18 @@ while true do
             if circuit > 0 then
                 main_transposer.transferItem(chest_with_circuits, main_enderchest, 1, circuit)
             end
-    end
+        end
 
-    reactor = getAvailibleReactor()
-    reactor:unload(reactor)
-    main_transposer.transferItem(main_enderchest, chest_with_circuits, 1, 27)
-    for i = 23, 26 do
-      main_transposer.transferItem(main_enderchest, interface, 64, i)
-    end
-    reactor:loadRecipe()
-        os.sleep(0.1)
+      reactor = getAvailibleReactor()
+      reactor:unload(reactor)
+      main_transposer.transferItem(main_enderchest, chest_with_circuits, 1, 27)
+      for i = 23, 26 do
+        main_transposer.transferItem(main_enderchest, interface, 64, i)
+      end
+      reactor:loadRecipe()
+          os.sleep(0.1)
 
-    else
-        os.sleep(0.3)
-    end
+      else
+          os.sleep(0.3)
+      end
 end
