@@ -52,8 +52,8 @@ local fluids_cell = {
 }
 
 local item_filter = {
-    ['gregtech:gt.metaitem.01:17035.0'] = true,
-    ['gregtech:gt.metaitem.01:2026.0'] = true,
+    ['gregtech:gt.metaitem.01:17035'] = true,
+    ['gregtech:gt.metaitem.01:2026'] = true,
 }
 
 function ChemicalReactor:loadFluid(self, hatchNumber, slot)
@@ -159,7 +159,8 @@ function ChemicalReactor:isInputBusEmpty()
         if item ~= nil and item.name ~= "gregtech:gt.integrated_circuit" and item_filter[item.name .. ":" .. item.damage] == nil then 
             is_empty = false
         end
-        
+        print("\n\n"..item.name ~= "gregtech:gt.integrated_circuit" .. " -> ")
+        print(item.name .. ":" .. item.damage)
         return is_empty
     end
 end
